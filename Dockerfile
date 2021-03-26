@@ -5,15 +5,12 @@ FROM ocaml/opam2:ubuntu-18.04-ocaml-4.07
 RUN sudo apt-get update && \
     sudo apt-get -y install m4 bmake cpio net-tools fswatch pkg-config jq
 
-# Cleanup
-RUN rm -rf /var/lib/apt/lists/* && \
-    apt-get purge --auto-remove && \
-    apt-get clean
+WORKDIR /home/opam/opam-repository
 
-RUN cd /home/opam/opam-repository && \
-    git pull && \
-    git checkout c23c1a7071910f235d5bc173cbadb97cd450e9fb && \
-    cd -
+RUN git pull && \
+    git checkout c23c1a7071910f235d5bc173cbadb97cd450e9fb
+
+WORKDIR /home/opam
 
 # Install opam dependencies
 RUN opam update && \
@@ -21,7 +18,14 @@ RUN opam update && \
     ppx_sexp_conv yojson ocp-indent calendar getopts merlin yaml ezjsonm mustache
 
 USER root
+
+# Cleanup
+RUN rm -rf /var/lib/apt/lists/* && \
+    apt-get purge --auto-remove && \
+    apt-get clean
+
 RUN ln -s /home/opam/.opam /root/.opam
+
 SHELL ["/bin/bash", "--login" , "-c"]
 ENV OPAM_SWITCH_PREFIX='/home/opam/.opam/4.07'
 ENV CAML_LD_LIBRARY_PATH='/home/opam/.opam/4.07/lib/stublibs:/home/opam/.opam/4.07/lib/ocaml/stublibs:/home/opam/.opam/4.07/lib/ocaml'
