@@ -26,11 +26,11 @@ for test_dir in tests/*; do
     if [ "${test_dir_name}" != "output" ] && [ -f "${expected_results_file_path}" ]; then
         bin/run.sh "${test_dir_name}" "${test_dir}" "${test_dir}"
 
-        # Normalize the solution path
-        sed -i "s~${test_dir_path}~/solution~g" "${results_file_path}"
-
-        # Normalize random log file names in the results file
-        sed -i 's/tests\-[^\.]*\.log/tests.log/g' "${results_file_path}"
+        # Normalize the results file
+        sed -i \
+            -e "s~${test_dir_path}~/solution~g" \
+            -e 's/tests\-[^\.]*\.log/tests.log/g' \
+             "${results_file_path}"
 
         echo "${test_dir_name}: comparing ${results_file} to ${expected_results_file}"
         diff "${results_file_path}" "${expected_results_file_path}"
