@@ -1,28 +1,24 @@
 # Install dependencies
 FROM ocaml/opam2:ubuntu-18.04-ocaml-4.07
 
-RUN sudo apt-get update
-RUN sudo apt-get install m4 bmake cpio -y
+# Install dependencies
+RUN sudo apt-get update && \
+    sudo apt-get -y install m4 bmake cpio net-tools fswatch pkg-config jq
 
-RUN cd /home/opam/opam-repository
-RUN git pull
-RUN git checkout c23c1a7071910f235d5bc173cbadb97cd450e9fb
-RUN cd -
+# Cleanup
+RUN rm -rf /var/lib/apt/lists/* && \
+    apt-get purge --auto-remove && \
+    apt-get clean
 
-RUN opam update
+RUN cd /home/opam/opam-repository && \
+    git pull && \
+    git checkout c23c1a7071910f235d5bc173cbadb97cd450e9fb && \
+    cd -
 
-ADD Makefile .
-RUN make install_deps
-RUN opam install merlin
-
-RUN sudo apt-get install net-tools fswatch -y
-RUN sudo apt-get install pkg-config -y
-
-RUN opam install yaml
-RUN opam install ezjsonm
-RUN opam install mustache
-
-RUN sudo apt-get install -y jq
+# Install opam dependencies
+RUN opam update && \
+    opam install dune fpath ocamlfind ounit qcheck react ppx_deriving ppx_let \
+    ppx_sexp_conv yojson ocp-indent calendar getopts merlin yaml ezjsonm mustache
 
 USER root
 RUN ln -s /home/opam/.opam /root/.opam
