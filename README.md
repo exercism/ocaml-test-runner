@@ -13,12 +13,14 @@ This repository is a [template repository](https://help.github.com/en/github/cre
 
 Once you're happy with your test runner, [open an issue on the exercism/automated-tests repo](https://github.com/exercism/automated-tests/issues/new?assignees=&labels=&template=new-test-runner.md&title=%5BNew+Test+Runner%5D+) to request an official test runner repository for your track.
 
-# Exercism TRACK_NAME_HERE Test Runner
+# Exercism OCaml Test Runner
 
-The Docker image to automatically run tests on TRACK_NAME_HERE solutions submitted to [Exercism].
+The Docker image to automatically run tests on OCaml solutions submitted to [Exercism].
 
 ## Running the Tests
+
 To run all of the tests, do the following:
+
 1. Open a terminal in the project's root
 2. Run `bin/run-tests.sh`
 
