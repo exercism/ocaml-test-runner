@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "status": "fail",
+  "output": "make: Entering directory '/solution'\ndune clean\ndune runtest\nFile \"leap.ml\", line 1, characters 24-26:\nError: Syntax error\nMakefile:4: recipe for target 'test' failed\nmake: *** [test] Error 1\nmake: Leaving directory '/solution'"
+}
