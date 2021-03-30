@@ -7,6 +7,7 @@ RUN sudo apt-get update && \
 
 WORKDIR /home/opam/opam-repository
 
+# TODO: figure out how to not do this
 RUN git pull && \
     git checkout c23c1a7071910f235d5bc173cbadb97cd450e9fb
 
@@ -24,8 +25,8 @@ RUN rm -rf /var/lib/apt/lists/* && \
     apt-get purge --auto-remove && \
     apt-get clean
 
+# TODO: figure out how to simplify the below
 RUN ln -s /home/opam/.opam /root/.opam
-
 SHELL ["/bin/bash", "--login" , "-c"]
 ENV OPAM_SWITCH_PREFIX='/home/opam/.opam/4.07'
 ENV CAML_LD_LIBRARY_PATH='/home/opam/.opam/4.07/lib/stublibs:/home/opam/.opam/4.07/lib/ocaml/stublibs:/home/opam/.opam/4.07/lib/ocaml'
