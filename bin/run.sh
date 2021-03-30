@@ -45,12 +45,8 @@ if [ $? -eq 0 ]; then
 else
     # Manually add colors to the output to help scanning the output for errors
     colorized_test_output=$(echo "$test_output" \
-         | GREP_COLOR='01;31' grep --color=always \
-            -e '^Error:.*' \
-            -e '^Makefile:[0-9]\+:.*failed$' \
-            -e '^make:.*Error.*' \
-            -e '^FAILED:.*' \
-            -e '^')
+         | GREP_COLOR='01;31' grep --color=always -E \
+            -e '^(Error:.*|make:.*Error.*|FAILED:.*|Makefile:[0-9]+:.*failed)|$')
 
     jq -n --arg output "${colorized_test_output}" '{version: 1, status: "fail", output: $output}' > ${results_file}
 fi
