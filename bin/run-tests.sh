@@ -26,9 +26,10 @@ for test_dir in tests/*; do
         bin/run.sh "${test_dir_name}" "${test_dir}" "${test_dir}"
 
         # Normalize the results file
-        sed -i \
+        sed -i -E \
             -e "s~${test_dir_path}~/solution~g" \
             -e 's/tests\-[^\.]*\.log/tests.log/g' \
+            -e 's/ in: [0-9]+\.[0-9]+ seconds//' \
              "${results_file_path}"
 
         echo "${test_dir_name}: comparing ${results_file} to ${expected_results_file}"
