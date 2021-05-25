@@ -1,5 +1,5 @@
 {
   "version": 1,
   "status": "fail",
-  "output": "make: Entering directory '/solution'\ndune clean\ndune runtest\nFile \"leap.ml\", line 1, characters 24-26:\n\u001b[01;31m\u001b[KError: Syntax error\u001b[m\u001b[K\n\u001b[01;31m\u001b[KMakefile:4: recipe for target 'test' failed\u001b[m\u001b[K\n\u001b[01;31m\u001b[Kmake: *** [test] Error 1\u001b[m\u001b[K\nmake: Leaving directory '/solution'"
+  "message": "make: Entering directory '/solution'\ndune clean\ndune runtest\nFile \"leap.ml\", line 1, characters 24-26:\n\u001b[01;31m\u001b[KError: Syntax error\u001b[m\u001b[K\n\u001b[01;31m\u001b[KMakefile:4: recipe for target 'test' failed\u001b[m\u001b[K\n\u001b[01;31m\u001b[Kmake: *** [test] Error 1\u001b[m\u001b[K\nmake: Leaving directory '/solution'"
 }

@@ -48,7 +48,7 @@ else
          | GREP_COLOR='01;31' grep --color=always -E \
             -e '^(Error:.*|make:.*Error.*|FAILED:.*|Makefile:[0-9]+:.*failed)|$')
 
-    jq -n --arg output "${colorized_test_output}" '{version: 1, status: "fail", output: $output}' > ${results_file}
+    jq -n --arg output "${colorized_test_output}" '{version: 1, status: "fail", message: $output}' > ${results_file}
 fi
 
 echo "${slug}: done"
