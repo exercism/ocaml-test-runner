@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Synopsis:
-# Test the test runner by running it against a predefined set of solutions 
+# Test the test runner by running it against a predefined set of solutions
 # with an expected output.
 
 # Output:
@@ -20,7 +20,7 @@ for test_dir in tests/*; do
     results_file="results.json"
     results_file_path="${test_dir}/results.json"
     expected_results_file="expected_results.json"
-    expected_results_file_path="${test_dir}/expected_results.json"    
+    expected_results_file_path="${test_dir}/expected_results.json"
 
     if [ "${test_dir_name}" != "output" ] && [ -f "${expected_results_file_path}" ]; then
         bin/run.sh "${test_dir_name}" "${test_dir}" "${test_dir}"
@@ -30,6 +30,7 @@ for test_dir in tests/*; do
             -e "s~${test_dir_path}~/solution~g" \
             -e 's/tests\-[^\.]*\.log/tests.log/g' \
             -e 's/ in: [0-9]+\.[0-9]+ seconds//' \
+            -e 's/\\n[F\.]*\\n/\\n\\n/' \
              "${results_file_path}"
 
         echo "${test_dir_name}: comparing ${results_file} to ${expected_results_file}"
