@@ -13,7 +13,7 @@ WORKDIR /home/opam/opam-repository
 
 # TODO: figure out how to not do this
 RUN git pull && \
-    git checkout c23c1a7071910f235d5bc173cbadb97cd450e9fb
+    git checkout a7fc137299d8c9e0fa8cfbfe8c902698c7ec5628
 
 WORKDIR /home/opam
 
