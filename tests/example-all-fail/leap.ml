@@ -1,2 +1,2 @@
 let leap_year year =
-  year mod 2 <> 0
+  year mod 13 <> 0
