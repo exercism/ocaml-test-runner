@@ -16,5 +16,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@154c24e1f33dbb5865a021c99f1318cfebf27b32
+
+      - name: Cache Docker layers
+        uses: actions/cache@26968a09c0ea4f3e233fdddbafd1166051a095f6
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker image
+        uses: docker/build-push-action@9379083e426e2e84abb80c8c091f5cdeb7d3fd7a # 2.3.0
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: |
+            ${{ github.event.repository.full_name }}:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
       - name: Run Tests in Docker
         run: bin/run-tests-in-docker.sh
