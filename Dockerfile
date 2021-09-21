@@ -11,6 +11,6 @@ RUN opam install base calendar dune ounit react qcheck
 
 ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
 
-COPY . /opt/test-runner
 WORKDIR /opt/test-runner
+COPY . .
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]
