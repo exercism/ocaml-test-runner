@@ -1,34 +1,15 @@
-# Install dependencies
-FROM ocaml/opam2:ubuntu-18.04-ocaml-4.07
-
-USER root
+FROM ocaml/opam:debian-ocaml-4.14-afl
 
 RUN sudo apt-get update && \
     sudo apt-get -y install m4 bmake cpio net-tools fswatch pkg-config jq && \
-    apt-get purge --auto-remove && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    sudo apt-get purge --auto-remove && \
+    sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/opam/opam-repository
+RUN opam update
+RUN opam install base calendar dune ounit react qcheck
 
-# TODO: figure out how to not do this
-RUN git pull && \
-    git checkout a7fc137299d8c9e0fa8cfbfe8c902698c7ec5628
-
-WORKDIR /home/opam
-
-RUN opam update && \
-    opam install dune fpath ocamlfind ounit qcheck react ppx_deriving ppx_let \
-    ppx_sexp_conv yojson ocp-indent calendar getopts merlin yaml ezjsonm mustache
-
-# TODO: figure out how to simplify the below
-RUN ln -s /home/opam/.opam /root/.opam
-SHELL ["/bin/bash", "--login" , "-c"]
-ENV OPAM_SWITCH_PREFIX='/home/opam/.opam/4.07'
-ENV CAML_LD_LIBRARY_PATH='/home/opam/.opam/4.07/lib/stublibs:/home/opam/.opam/4.07/lib/ocaml/stublibs:/home/opam/.opam/4.07/lib/ocaml'
-ENV OCAML_TOPLEVEL_PATH='/home/opam/.opam/4.07/lib/toplevel'
-ENV MANPATH=':/root/.opam/4.07.1/man:/home/opam/.opam/4.07/man'
-ENV PATH='/home/opam/.opam/4.07/bin:/root/.opam/4.07.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
 
 COPY . /opt/test-runner
 WORKDIR /opt/test-runner
