@@ -43,8 +43,16 @@ test_output=$(make -C ${input_dir} 2>&1)
 if [ $? -eq 0 ]; then
     jq -n '{version: 1, status: "pass"}' > ${results_file}
 else
+    # Sanitize the output
+    sanitized_test_output=$(echo "${test_output}" | sed -E \
+        -e "s/(make: (Entering|Leaving) directory '[^']+'|dune (clean|runtest))| *test alias runtest \(exit 1\)|\(cd _build[^\)]+\)//g" \
+        -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}' \
+        -e 's/tests-[^\.]+\.log/tests.log/g' \
+        -e 's/in: [0-9]+\.[0-9]+ seconds\.//g' \
+        -e '/[F|\.]+$/d')
+
     # Manually add colors to the output to help scanning the output for errors
-    colorized_test_output=$(echo "$test_output" \
+    colorized_test_output=$(echo "$sanitized_test_output" \
          | GREP_COLOR='01;31' grep --color=always -E \
             -e '^(Error:.*|make:.*Error.*|FAILED:.*|Makefile:[0-9]+:.*failed)|$')
 
