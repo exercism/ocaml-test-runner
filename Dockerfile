@@ -9,7 +9,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN opam update
-RUN opam install base calendar dune ounit react qcheck
+RUN opam install base core dune \
+  calendar react \
+  ounit ounit2 qcheck \
+  ppx_deriving
 
 ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
 
