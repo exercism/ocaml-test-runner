@@ -1,4 +1,1 @@
-{
-  "version": 1,
-  "status": "pass"
-}
+{"version": 2, "status": "pass", "message": null, "tests": [{"name": "leap tests:0:year not divisible by 4 in common year", "status": "pass", "message": null, "output": null, "test_code": null}, {"name": "leap tests:1:year divisible by 2, not divisible by 4 in common year", "status": "pass", "message": null, "output": null, "test_code": null}, {"name": "leap tests:2:year divisible by 4, not divisible by 100 in leap year", "status": "pass", "message": null, "output": null, "test_code": null}, {"name": "leap tests:3:year divisible by 100, not divisible by 400 in common year", "status": "pass", "message": null, "output": null, "test_code": null}, {"name": "leap tests:4:year divisible by 400 in leap year", "status": "pass", "message": null, "output": null, "test_code": null}, {"name": "leap tests:5:year divisible by 200, not divisible by 400 in common year", "status": "pass", "message": null, "output": null, "test_code": null}]}
