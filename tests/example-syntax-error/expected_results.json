@@ -1,5 +1,1 @@
-{
-  "version": 1,
-  "status": "fail",
-  "message": "File \"leap.ml\", line 1, characters 24-26:\n1 | LETTT #leap_year year @%#=\n                            ^^\n\u001b[01;31m\u001b[KError: Syntax error\u001b[m\u001b[K\n\u001b[01;31m\u001b[Kmake: *** [Makefile:4: test] Error 1\u001b[m\u001b[K"
-}
+{"version": 2, "status": "error", "message": "make: Entering directory '/solution'\ndune clean\ndune runtest\nFile \"leap.ml\", line 1, characters 24-26:\n1 | LETTT #leap_year year @%#=\n                            ^^\nError: Syntax error\nmake: *** [Makefile:4: test] Error 1\nmake: Leaving directory '/solution'\n", "tests": null}
