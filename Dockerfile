@@ -3,15 +3,13 @@ FROM ocaml/opam:debian-ocaml-4.14-afl
 USER root
 
 RUN apt-get update && \
-    apt-get -y install m4 bmake cpio net-tools fswatch pkg-config jq python3-xmltodict && \
+    apt-get -y install m4 bmake cpio net-tools fswatch pkg-config jq && \
     apt-get purge --auto-remove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/test-runner && chown -R opam:opam /opt/test-runner
-
-RUN opam update \
- && opam install base core dune \
+RUN opam update
+RUN opam install base core dune \
   calendar react \
   ounit ounit2 qcheck \
   ppx_deriving
