@@ -16,12 +16,50 @@ set -e
 # Build the Docker image
 docker build --rm -t exercism/ocaml-test-runner .
 
-# Run the Docker image using the settings mimicking the production environment
+exit_code=0
+
+run_test() {
 docker run \
     --network none \
     --read-only \
     --mount type=bind,src="${PWD}/tests",dst=/opt/test-runner/tests \
     --mount type=tmpfs,dst=/tmp \
     --workdir /opt/test-runner \
-    --entrypoint /opt/test-runner/bin/run-tests.sh \
-    exercism/ocaml-test-runner
+    --entrypoint /opt/test-runner/bin/run.sh \
+    exercism/ocaml-test-runner\
+    "${@}"
+}
+
+# Iterate over all test directories
+for test_dir in tests/*; do
+    test_dir_name="$(basename $test_dir)"
+    test_dir_path="$(realpath $test_dir)"
+    results_file="results.json"
+    results_file_path="${test_dir}/results.json"
+    expected_results_file="expected_results.json"
+    expected_results_file_path="${test_dir}/expected_results.json"
+
+    if [ "${test_dir_name}" != "output" ] && [ -f "${expected_results_file_path}" ]; then
+        run_test "${test_dir_name}" "${test_dir}" "${test_dir}"
+
+        # Normalize the results file
+        sed -i -E \
+            -e "s~${test_dir_path}~/solution~g" \
+            -e 's/tests\-[^\.]*\.log/tests.log/g' \
+            -e 's/ in: [0-9]+\.[0-9]+ seconds//' \
+            -e 's/\\n[F\.]*\\n/\\n\\n/' \
+             "${results_file_path}"
+
+        echo "${test_dir_name}: comparing ${results_file} to ${expected_results_file}"
+        diff "${results_file_path}" "${expected_results_file_path}"
+
+        if [ $? -ne 0 ]; then
+            exit_code=1
+        fi
+    fi
+done
+
+exit ${exit_code}
+
+
+# Run the Docker image using the settings mimicking the production environment
