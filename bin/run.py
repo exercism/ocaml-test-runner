@@ -55,19 +55,24 @@ class ProcessJUnit:
             return "fail"
         return "pass"
 
+    @staticmethod
+    def _testcase_to_test(test: t.Dict[str, t.Any]) -> Test:
+        return Test(
+            name=test.get("@name"),
+            status="fail" if "failure" in test else "pass",
+            message=test.get("failure", {}).get("#text", None),
+            output=None,
+            test_code=None,
+        )
+
     @property
     def tests(self) -> t.List[Test]:
         r = []
-        for test in self.data.get("testcase", []):
-            r.append(
-                Test(
-                    name=test.get("@name"),
-                    status="fail" if "failure" in test else "pass",
-                    message=test.get("failure", {}).get("#text", None),
-                    output=None,
-                    test_code=None,
-                )
-            )
+        testcases = self.data.get("testcase", [])
+        if not isinstance(testcases, list):
+            return [self._testcase_to_test(testcases)]
+        for test in testcases:
+            r.append(self._testcase_to_test(test))
         return r
 
     @property
