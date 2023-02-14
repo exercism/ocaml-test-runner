@@ -8,6 +8,7 @@ import tempfile
 import argparse
 import os
 import pathlib
+import re
 
 from dataclasses import dataclass, asdict
 import typing as t
@@ -35,7 +36,7 @@ class Result:
         return asdict(self)
 
     def to_json(self):
-        return json.dumps(self.to_dict())
+        return json.dumps(self.to_dict(), indent=2)
 
 
 class ProcessJUnit:
@@ -54,24 +55,55 @@ class ProcessJUnit:
             return "fail"
         return "pass"
 
+    @staticmethod
+    def _testcase_to_test(test: t.Dict[str, t.Any]) -> Test:
+        return Test(
+            name=test.get("@name"),
+            status="fail" if "failure" in test else "pass",
+            message=test.get("failure", {}).get("#text", None),
+            output=None,
+            test_code=None,
+        )
+
     @property
     def tests(self) -> t.List[Test]:
         r = []
-        for test in self.data.get("testcase", []):
-            r.append(
-                Test(
-                    name=test.get("@name"),
-                    status="fail" if "failure" in test else "pass",
-                    message=test.get("failure", {}).get("#text", None),
-                    output=None,
-                    test_code=None,
-                )
-            )
+        testcases = self.data.get("testcase", [])
+        if not isinstance(testcases, list):
+            return [self._testcase_to_test(testcases)]
+        for test in testcases:
+            r.append(self._testcase_to_test(test))
         return r
 
     @property
     def result(self) -> Result:
         return Result(version=2, status=self.status, message=None, tests=self.tests)
+
+
+def sanitize_output(output: str) -> str:
+
+    # Remove make outputs
+    output = re.sub(
+        r"("
+        + r"make: (Entering|Leaving) directory '[^']+'"
+        + r"|dune (clean|runtest)"
+        + r")"
+        + r"| *test alias runtest \(exit 1\)"
+        + r"|\(cd _build[^\)]+\)",
+        "",
+        output,
+    )
+
+    # Remove variable test numbering
+    output = re.sub(r"tests-[^\.]+\.log", "tests.log", output)
+
+    # Remove variable elapsed time
+    output = re.sub(r"in: [0-9]+\.[0-9]+ seconds\.", "", output)
+
+    # Remove blank lines
+    output = "\n".join([ll.rstrip() for ll in output.splitlines() if ll.strip()])
+
+    return output
 
 
 def run_test(path) -> Result:
@@ -91,7 +123,9 @@ def run_test(path) -> Result:
         )
     except subprocess.CalledProcessError as e:
         if not os.path.isfile(junit_file):
-            return Result(version=2, status="error", message=e.output, tests=None)
+            return Result(
+                version=2, status="error", message=sanitize_output(e.output), tests=None
+            )
 
     return ProcessJUnit(junit_file).result
 

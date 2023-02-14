@@ -1,1 +1,6 @@
-{"version": 2, "status": "error", "message": "make: Entering directory '/solution'\ndune clean\ndune runtest\nFile \"leap.ml\", line 1:\nError: The implementation leap.ml\n       does not match the interface .test.eobjs/byte/leap.cmi: \n       The value `leap_year' is required but not provided\n       File \"leap.mli\", line 1, characters 0-26: Expected declaration\nmake: *** [Makefile:4: test] Error 1\nmake: Leaving directory '/solution'\n", "tests": null}
+{
+  "version": 2,
+  "status": "error",
+  "message": "File \"leap.ml\", line 1:\nError: The implementation leap.ml\n       does not match the interface .test.eobjs/byte/leap.cmi:\n       The value `leap_year' is required but not provided\n       File \"leap.mli\", line 1, characters 0-26: Expected declaration\nmake: *** [Makefile:4: test] Error 1",
+  "tests": null
+}
