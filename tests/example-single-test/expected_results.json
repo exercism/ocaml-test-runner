@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "status": "pass",
+  "message": null,
+  "tests": [
+    {
+      "name": "Hello World tests:0:Say Hi!",
+      "status": "pass",
+      "message": null,
+      "output": null,
+      "test_code": null
+    }
+  ]
+}
