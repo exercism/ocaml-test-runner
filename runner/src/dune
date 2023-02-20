@@ -1,0 +1,5 @@
+(executable 
+ (public_name runner)
+ (name runner)
+ (libraries yojson ezxmlm unix))
+ 
