@@ -13,11 +13,13 @@ RUN mkdir -p /opt/test-runner && chown -R opam:opam /opt/test-runner
 RUN opam update \
  && opam install base core dune \
   calendar react \
-  ounit ounit2 qcheck \
+  ounit ounit2 qcheck ezxmlm yojson \
   ppx_deriving
 
 ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
 
 WORKDIR /opt/test-runner
 COPY . .
+RUN cd runner && dune build 
+RUN cp runner/_build/default/src/runner.exe bin/runner 
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]
