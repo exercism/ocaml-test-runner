@@ -9,11 +9,14 @@ let absolute_path path =
 (** [run_with_env cmd env] runs [cmd] in environment [env]. Returns [true] 
     if process exited normally and returned 0, [false] otherwise. *)
 let run_with_env cmd args env = 
-  let _pid = Unix.create_process_env cmd args env Unix.stdin Unix.stdout Unix.stderr in 
-  let _wpid, status = Unix.wait () in 
+  let stdout, stdin, stderr = Unix.open_process_args_full cmd args env in 
+  let out = In_channel.input_all stdout in 
+  let err = In_channel.input_all stderr in 
+  let status = Unix.close_process_full (stdout, stdin, stderr) in 
   match status with 
-  | Unix.WEXITED code -> code
-  | _ -> -1
+  | Unix.WEXITED code -> (code, out, err)
+  | _ -> (-1, out, err)
+
 
 let add_to_current_env var value = 
   let env = Unix.environment () in 
@@ -77,20 +80,34 @@ let root_object status msg cases_json =
     "message", msg;
     "tests", `List cases_json
   ]
+
+let error_root_object msg = 
+  `Assoc [
+    "version", `Int 2;
+    "status", `String "error";
+    "message", `String msg;
+    "tests", `Null
+  ] 
   
+let sort_cases cases = 
+  List.sort (fun c1 c2 -> String.compare c1.name c2.name) cases 
+
 let json_from_suite_results suite = 
   match suite.failures, suite.errors with 
-  | 0, 0 -> root_object "pass" `Null (List.map case_json suite.cases)
-  | _, 0 -> root_object "fail" `Null (List.map case_json suite.cases)
-  | _, _ -> root_object "error" (`String "compiler error") []
+  | 0, 0 -> root_object "pass" `Null (List.map case_json (sort_cases suite.cases))
+  | _, 0 -> root_object "fail" `Null (List.map case_json (sort_cases suite.cases))
+  | _, _ -> root_object "error" (`String "unknown compiler error") []
 
-let generate_json_results xml_path = 
+let generate_json_results xml_path err = 
   if Sys.file_exists xml_path then 
     json_from_suite_results @@ read_xml xml_path
   else
-    root_object "error" (`String "compiler error") []
+    error_root_object err 
 
 let xml_file_suffix = "junit-results.xml"
+
+let sanitize_error_output err = 
+  String.trim err 
 
 let run_tests slug solution_dir output_dir = 
   let xml_file = Printf.sprintf "%s-%s" slug xml_file_suffix in 
@@ -98,8 +115,9 @@ let run_tests slug solution_dir output_dir =
   let xml_path = Filename.concat abs_out_path xml_file in 
   let args = [| "make"; "-C"; solution_dir |] in 
   let env = add_to_current_env "OUNIT_OUTPUT_JUNIT_FILE" xml_path in 
-  let _run_code = run_with_env "make" args env in 
-  generate_json_results xml_path 
+  let _code, _out, err = run_with_env "make" args env in 
+  let sanitized_err = sanitize_error_output err in 
+  generate_json_results xml_path sanitized_err
 
 let main slug solution_dir output_dir = 
   let abs_out_path = absolute_path output_dir in 
