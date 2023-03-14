@@ -1,0 +1,20 @@
+(lang dune 3.6)
+
+(name runner)
+
+(generate_opam_files true)
+
+(source
+ (github exercism/ocaml-test-runner))
+
+(authors "Author Name")
+
+(license LICENSE)
+
+(package
+ (name runner)
+ (synopsis "OCaml test runner for Exercism")
+ (description "OCaml test runner for Exercism")
+ (depends ocaml dune yojson ezxmlm)
+ (tags
+  (exercism ocaml learning)))

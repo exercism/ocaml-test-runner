@@ -6,14 +6,14 @@
     {
       "name": "leap tests:0:leap year",
       "status": "fail",
-      "message": "expected: false but got: true\nRaised at OUnitAssert.assert_failure in file \"src/lib/ounit2/advanced/oUnitAssert.ml\", line 45, characters 2-27\nCalled from OUnitRunner.run_one_test.(fun) in file \"src/lib/ounit2/advanced/oUnitRunner.ml\", line 83, characters 13-26",
+      "message": "expected: false but got: true",
       "output": null,
       "test_code": null
     },
     {
       "name": "leap tests:1:not leap year",
       "status": "fail",
-      "message": "expected: false but got: true\nRaised at OUnitAssert.assert_failure in file \"src/lib/ounit2/advanced/oUnitAssert.ml\", line 45, characters 2-27\nCalled from OUnitRunner.run_one_test.(fun) in file \"src/lib/ounit2/advanced/oUnitRunner.ml\", line 83, characters 13-26",
+      "message": "expected: false but got: true",
       "output": null,
       "test_code": null
     }
