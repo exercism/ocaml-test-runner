@@ -23,5 +23,5 @@ RUN opam update \
 COPY . .
 COPY --from=builder /home/opam/runner/_build/default/src/runner.exe bin/runner
 ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
-
+USER root
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]
