@@ -1,25 +1,27 @@
-FROM ocaml/opam:debian-ocaml-4.14-afl
+FROM ocaml/opam:alpine-3.18-ocaml-4.14-afl AS builder
 
-USER root
-
-RUN apt-get update && \
-    apt-get -y install m4 bmake cpio net-tools fswatch pkg-config jq && \
-    apt-get purge --auto-remove && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /opt/test-runner && chown -R opam:opam /opt/test-runner
 
 RUN opam update \
  && opam install base core dune \
   calendar react \
   ounit ounit2 qcheck ezxmlm yojson \
   ppx_deriving
-
 ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
 
-WORKDIR /opt/test-runner
 COPY . .
-RUN cd runner && dune build 
-RUN cp runner/_build/default/src/runner.exe bin/runner 
+WORKDIR ./runner
+USER root
+RUN dune build
+USER $CONTAINER_USER_ID
+
+FROM ocaml/opam:alpine-3.18-ocaml-4.14-afl
+WORKDIR /opt/test-runner
+
+
+RUN opam update \
+ && opam install dune ounit2 base qcheck react ppx_sexp_conv calendar ppx_deriving
+COPY . .
+COPY --from=builder /home/opam/runner/_build/default/src/runner.exe bin/runner
+ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
+USER root
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]
