@@ -1,6 +1,5 @@
 FROM ocaml/opam:alpine-3.18-ocaml-4.14-afl AS builder
 
-#RUN mkdir -p /opt/test-runner && chown -R opam:opam /opt/test-runner
 
 RUN opam update \
  && opam install base core dune \
