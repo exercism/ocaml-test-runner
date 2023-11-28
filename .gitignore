@@ -1,3 +1,4 @@
 tests/**/results.json
 tests/**/.merlin.json
+tests/**/*-junit-results.xml
 **/_build/

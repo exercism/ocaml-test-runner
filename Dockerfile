@@ -1,27 +1,27 @@
-FROM ocaml/opam:alpine-3.18-ocaml-4.14-afl AS builder
+FROM ocaml/opam:alpine-3.18-ocaml-5.2 AS builder
 
+ENV PATH="/home/opam/.opam/5.2/bin:${PATH}"
 
-RUN opam update \
- && opam install base core dune \
-  calendar react \
-  ounit ounit2 qcheck ezxmlm yojson \
-  ppx_deriving
-ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
+# We purposefully don't combine the opam update and opam install steps
+# to allow the opam update layer to be re-used in the runner image below 
+RUN opam update
+RUN opam install dune yojson ezxmlm
 
-COPY . .
-WORKDIR ./runner
-USER root
+WORKDIR /opt/test-runner
+COPY runner/ .
 RUN dune build
-USER $CONTAINER_USER_ID
 
-FROM ocaml/opam:alpine-3.18-ocaml-4.14-afl
+FROM ocaml/opam:alpine-3.18-ocaml-5.2 AS runner
+
+ENV PATH="/home/opam/.opam/5.2/bin:${PATH}"
+
+RUN opam update
+RUN opam install base ounit2 qcheck react calendar
+
 WORKDIR /opt/test-runner
 
-
-RUN opam update \
- && opam install dune ounit2 base qcheck react ppx_sexp_conv calendar ppx_deriving
+COPY --from=builder /opt/test-runner/_build/default/src/runner.exe bin/runner
 COPY . .
-COPY --from=builder /home/opam/runner/_build/default/src/runner.exe bin/runner
-ENV PATH="/home/opam/.opam/4.14/bin:${PATH}"
+
 USER root
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]
