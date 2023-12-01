@@ -16,7 +16,7 @@ FROM ocaml/opam:alpine-3.18-ocaml-5.2 AS runner
 ENV PATH="/home/opam/.opam/5.2/bin:${PATH}"
 
 RUN opam update
-RUN opam install base ounit2 qcheck react calendar
+RUN opam install base ounit2 ppx_deriving ppx_sexp_conv qcheck react calendar
 
 WORKDIR /opt/test-runner
 
