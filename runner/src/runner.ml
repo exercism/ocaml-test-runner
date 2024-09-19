@@ -1,5 +1,8 @@
 open Ezxmlm
 
+let version = 3
+let version_json = `Int version
+
 let absolute_path path = 
   if Filename.is_relative path then 
     Filename.concat (Sys.getcwd ()) path 
@@ -23,7 +26,7 @@ let add_to_current_env var value =
   let new_var = Printf.sprintf "%s=%s" var value in 
   Array.append env [| new_var |] 
 
-type case = { name: string; failmsg: string option } 
+type case = { name: string; task_id: int option; failmsg: string option } 
 type suite = { _tests: int; failures: int; errors: int; cases: case list }
 
 let check_case_failure case =
@@ -36,7 +39,7 @@ let read_case case_with_attrs =
   let attrs = fst case_with_attrs in
   let name = get_attr "name" attrs
   and failmsg = check_case_failure (snd case_with_attrs) in
-  { name; failmsg }
+  { name; task_id = None; failmsg }
 
 let read_xml_from_channel ch = 
   let (_, xml) = from_channel ch in 
@@ -57,6 +60,8 @@ let read_xml_from_channel ch =
 let read_xml fname = 
   In_channel.with_open_text fname read_xml_from_channel
 
+let task_id_json (task_id: int option): [> `Int of int | `Null] =
+  task_id |> Option.map (fun id -> `Int id) |> Option.value ~default:`Null
 
 let build_case_json case status msg = 
   `Assoc [
@@ -64,9 +69,10 @@ let build_case_json case status msg =
     "status", `String status;
     "message", msg;
     "output", `Null;
-    "test_code", `Null
+    "test_code", `Null;
+    "task_id", task_id_json case.task_id
   ]
-  
+
 let case_json case = 
   match case.failmsg with 
   | None -> build_case_json case "pass" `Null
@@ -74,7 +80,7 @@ let case_json case =
   
 let root_object status msg cases_json = 
   `Assoc [
-    "version", `Int 2;
+    "version", version_json;
     "status", `String status;
     "message", msg;
     "tests", `List cases_json
@@ -82,7 +88,7 @@ let root_object status msg cases_json =
 
 let error_root_object msg = 
   `Assoc [
-    "version", `Int 2;
+    "version", version_json;
     "status", `String "error";
     "message", `String msg;
     "tests", `Null
