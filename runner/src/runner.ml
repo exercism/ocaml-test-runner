@@ -29,6 +29,16 @@ let add_to_current_env var value =
 type case = { name: string; task_id: int option; failmsg: string option } 
 type suite = { _tests: int; failures: int; errors: int; cases: case list }
 
+let name_task_regexp = Str.regexp {|^\(.*\)\b @ task \([1-9]+\)$|}
+
+let case_of_name raw_name failmsg =
+  if Str.string_match name_task_regexp raw_name 0 then
+    let group i = Str.matched_group i raw_name in
+    let name = group 1
+    and task_id = group 2 |> int_of_string_opt
+    in { name; task_id; failmsg }
+  else {name = raw_name; task_id = None; failmsg }
+
 let check_case_failure case =
   match members_with_attr "failure" case with 
   | [] -> None
@@ -39,7 +49,7 @@ let read_case case_with_attrs =
   let attrs = fst case_with_attrs in
   let name = get_attr "name" attrs
   and failmsg = check_case_failure (snd case_with_attrs) in
-  { name; task_id = None; failmsg }
+  case_of_name name failmsg
 
 let read_xml_from_channel ch = 
   let (_, xml) = from_channel ch in 

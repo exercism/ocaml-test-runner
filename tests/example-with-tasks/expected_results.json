@@ -1,0 +1,47 @@
+{
+  "version": 3,
+  "status": "pass",
+  "message": null,
+  "tests": [
+    {
+      "name": "lasagna tests:0:expected time",
+      "status": "pass",
+      "message": null,
+      "output": null,
+      "test_code": null,
+      "task_id": 1
+    },
+    {
+      "name": "lasagna tests:1:remaining time",
+      "status": "pass",
+      "message": null,
+      "output": null,
+      "test_code": null,
+      "task_id": 2
+    },
+    {
+      "name": "lasagna tests:2:no more time",
+      "status": "pass",
+      "message": null,
+      "output": null,
+      "test_code": null,
+      "task_id": 2
+    },
+    {
+      "name": "lasagna tests:3:preparation time",
+      "status": "pass",
+      "message": null,
+      "output": null,
+      "test_code": null,
+      "task_id": 3
+    },
+    {
+      "name": "lasagna tests:4:total time",
+      "status": "pass",
+      "message": null,
+      "output": null,
+      "test_code": null,
+      "task_id": 4
+    }
+  ]
+}
