@@ -34,10 +34,9 @@ let check_case_failure case =
 
 let read_case case_with_attrs = 
   let attrs = fst case_with_attrs in
-  let name = get_attr "name" attrs in
-  match check_case_failure (snd case_with_attrs) with
-  | None -> { name; failmsg = None }
-  | Some m -> { name; failmsg = Some m }
+  let name = get_attr "name" attrs
+  and failmsg = check_case_failure (snd case_with_attrs) in
+  { name; failmsg }
 
 let read_xml_from_channel ch = 
   let (_, xml) = from_channel ch in 
