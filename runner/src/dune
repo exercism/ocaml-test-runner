@@ -1,5 +1,15 @@
-(executable 
+(executable
+ (modules runner)
  (public_name runner)
  (name runner)
- (libraries yojson ezxmlm unix str))
- 
+ (libraries case yojson ezxmlm unix))
+
+(library
+ (modules case)
+ (name case)
+ (libraries str))
+
+(test
+ (modules test)
+ (name test)
+ (libraries case ounit2))
