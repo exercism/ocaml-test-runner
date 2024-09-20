@@ -1,0 +1,12 @@
+(library
+  (modules lucian_luscious_lasagna)
+  (name lucian_luscious_lasagna))
+
+(test
+ (modules test)
+ (name test)
+ (libraries lucian_luscious_lasagna ounit2))
+
+(env
+  (dev
+    (flags (:standard -warn-error -A))))

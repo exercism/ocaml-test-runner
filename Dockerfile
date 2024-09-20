@@ -5,11 +5,11 @@ ENV PATH="/home/opam/.opam/5.1/bin:${PATH}"
 # We purposefully don't combine the opam update and opam install steps
 # to allow the opam update layer to be re-used in the runner image below 
 RUN opam update
-RUN opam install dune yojson ezxmlm
+RUN opam install dune ounit2 yojson ezxmlm
 
 WORKDIR /opt/test-runner
 COPY runner/ .
-RUN dune build
+RUN dune test && dune build
 
 FROM ocaml/opam:alpine-3.18-ocaml-5.1 AS runner
 
