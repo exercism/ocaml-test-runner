@@ -1,7 +1,7 @@
 type case = { name: string; task_id: int option; failmsg: string option }
 type suite = { _tests: int; failures: int; errors: int; cases: case list }
 
-let name_task_regexp = Str.regexp {|^\(.*\)\b @ task \([1-9]+\)$|}
+let name_task_regexp = Str.regexp {|^\(.*\)\b @ task \([1-9][0-9]*\)$|}
 
 let case_of_name raw_name failmsg =
   if Str.string_match name_task_regexp raw_name 0 then

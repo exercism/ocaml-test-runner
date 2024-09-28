@@ -15,7 +15,7 @@ let tests = [
     ; "Without task" >::
       ae { name = "Test"; task_id = None; failmsg = None } @@ case_of_name "Test" None
     ; "With task (multiple digits id)" >::
-      ae { name = "Test"; task_id = Some 123; failmsg = None } @@ case_of_name "Test @ task 123" None
+      ae { name = "Test"; task_id = Some 210; failmsg = None } @@ case_of_name "Test @ task 210" None
     ; "@ task without id" >::
       ae { name = "Test @ task"; task_id = None; failmsg = None } @@ case_of_name "Test @ task" None
     ; "@ task with id 0" >::
