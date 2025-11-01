@@ -2,7 +2,7 @@
 # --disable-flat-float-array. This gives a container smaller image overall
 # but disables OCaml's optimization for float arrays. Does not prevent
 # float arrays from being used.
-FROM docker.io/ocaml/opam:alpine-ocaml-5.4-no-flat-float-array AS builder
+FROM docker.io/ocaml/opam:debian-13-ocaml-5.4-no-flat-float-array AS builder
 
 ENV PATH="/home/opam/.opam/5.4/bin:${PATH}"
 
@@ -19,7 +19,7 @@ RUN chown -R opam:opam /opt/test-runner
 COPY runner/ .
 RUN dune test && dune build
 
-FROM docker.io/ocaml/opam:alpine-ocaml-5.4-no-flat-float-array AS runner
+FROM docker.io/ocaml/opam:debian-13-ocaml-5.4-no-flat-float-array AS runner
 
 ENV PATH="/home/opam/.opam/5.4/bin:${PATH}"
 
