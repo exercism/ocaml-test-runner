@@ -34,7 +34,7 @@ RUN opam clean -a \
 
 # ---- runner: slim base + the OCaml files from the builder + a C toolchain ----
 # Pinned Debian 13 (trixie) slim, matching the lean/racket/vlang test runners.
-FROM debian:trixie-slim@sha256:109e2c65005bf160609e4ba6acf7783752f8502ad218e298253428690b9eaa4b AS runner
+FROM debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS runner
 
 # dune compiles each solution to native code at runtime, so a C toolchain is
 # needed: gcc + binutils (as/ld) + libc headers. make: the exercise Makefiles
