@@ -3,7 +3,7 @@
 # --disable-flat-float-array. This gives a container smaller image overall
 # but disables OCaml's optimization for float arrays. Does not prevent
 # float arrays from being used.
-FROM docker.io/ocaml/opam:debian-13-ocaml-5.4-no-flat-float-array@sha256:dfe7ce9fdd804f98768e9c3038531f9b4d9e91bc413dea3bf6c3526aaf21f768 AS builder
+FROM docker.io/ocaml/opam:debian-13-ocaml-5.6-no-flat-float-array@sha256:96d2934b0d109b170bd38ce5c2b47cea728445a4092391f61a95e7074a50564f AS builder
 
 ENV PATH="/home/opam/.opam/5.4/bin:${PATH}"
 
