@@ -5,7 +5,7 @@ ARG VERSION=5.5
 # but disables OCaml's optimization for float arrays. Does not prevent
 # float arrays from being used.
 FROM docker.io/ocaml/opam:debian-13-ocaml-${VERSION}-no-flat-float-array@sha256:913e4694f4acdaa5b183ab45a3b099c64b9e96bdbbf4ced4e5cae937dee8f92f AS builder
-ARG VERSION=5.5
+ARG VERSION
 
 ENV PATH="/home/opam/.opam/5.5/bin:${PATH}"
 
