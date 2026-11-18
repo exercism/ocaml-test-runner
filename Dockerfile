@@ -42,9 +42,11 @@ ARG VERSION
 # dune compiles each solution to native code at runtime, so a C toolchain is
 # needed: gcc + binutils (as/ld) + libc headers. make: the exercise Makefiles
 # invoke `dune runtest`. libzstd-dev: OCaml 5 links against zstd using `-lzstd`.
+# mold: the runner's fast path links test executables with it (see
+# bin/record-fast-path.sh).
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-        gcc binutils libc6-dev make libzstd-dev \
+        gcc binutils libc6-dev make libzstd-dev mold \
  && rm -rf /var/lib/apt/lists/*
 
 # Copy the OCaml compiler, libraries and tools built above. They record this

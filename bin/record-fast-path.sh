@@ -48,7 +48,9 @@ EOF
     link=$(grep -- 'ocamlopt.opt .* -o test.exe ' <<< "${log}" \
         | sed -e 's/.* -o test\.exe //' -e 's| .test.eobjs/native/test.cmx)$||')
 
-    args="${compile} -o test.exe ${link}"
+    # Linking with mold instead of ld takes about a tenth of the time. The
+    # test executable stays the same program, so results don't change.
+    args="${compile} -ccopt -fuse-ld=mold -o test.exe ${link}"
     if [[ -z "${compile}" || -z "${link}" || "${args}" == *eobjs* ]]; then
         echo "Could not read dune's ocamlopt arguments for: ${libraries}" >&2
         echo "${log}" >&2
