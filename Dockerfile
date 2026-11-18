@@ -66,4 +66,8 @@ WORKDIR /opt/test-runner
 COPY --from=builder /opt/test-runner/_build/default/src/runner.exe bin/runner
 COPY . .
 
+# Record the ocamlopt arguments dune uses for each library set, so the runner
+# can compile most solutions with one ocamlopt call instead of dune.
+RUN bin/record-fast-path.sh
+
 ENTRYPOINT ["/opt/test-runner/bin/run.sh"]

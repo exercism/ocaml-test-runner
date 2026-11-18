@@ -1,8 +1,8 @@
 (executable
- (modules runner)
+ (modules runner fast)
  (public_name runner)
  (name runner)
- (libraries case yojson ezxmlm unix))
+ (libraries case str yojson ezxmlm unix))
 
 (library
  (modules case)
