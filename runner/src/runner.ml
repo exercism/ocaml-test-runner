@@ -116,6 +116,9 @@ let run_tests slug solution_dir output_dir =
   let xml_file = Printf.sprintf "%s-%s" slug xml_file_suffix in 
   let abs_out_path = absolute_path output_dir in 
   let xml_path = Filename.concat abs_out_path xml_file in 
+  if Fast.run_tests (absolute_path solution_dir) xml_path then
+    generate_json_results xml_path ""
+  else
   let args = [| "make"; "-C"; solution_dir |] in 
   let env = add_to_current_env "OUNIT_OUTPUT_JUNIT_FILE" xml_path in 
   let _code, _out, err = run_with_env "make" args env in 
