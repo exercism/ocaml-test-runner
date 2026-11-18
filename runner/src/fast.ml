@@ -161,9 +161,14 @@ let try_run_tests solution_dir xml_path =
               match run ~cwd:build_dir ocamlopt (args @ sorted) with
               | None -> false
               | Some _ ->
+                  (* OUnit's default runner runs the tests in two worker
+                     processes, and waits 0.1 s for each worker to exit at the
+                     end. The sequential runner runs them in this process.
+                     If a test crashes the process, no report gets written
+                     and the usual path runs the tests the old way. *)
                   let env =
                     Array.append (Unix.environment ())
-                      [| "OUNIT_OUTPUT_JUNIT_FILE=" ^ xml_path |]
+                      [| "OUNIT_OUTPUT_JUNIT_FILE=" ^ xml_path; "OUNIT_RUNNER=sequential" |]
                   in
                   ignore (run ~env ~cwd:build_dir (Filename.concat build_dir "test.exe") []);
                   Sys.file_exists xml_path))
